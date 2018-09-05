@@ -55,6 +55,6 @@ class PEOAuth2ClientExtension extends \Twig_Extension
             }, ARRAY_FILTER_USE_KEY);
         }
 
-        return $this->environment->render('@PEOAuth2Client/buttons.html.twig', ['providers' => $providers]);
+        return $this->environment->render('@PEOAuth2Client/Default/buttons.html.twig', ['providers' => $providers]);
     }
 }
