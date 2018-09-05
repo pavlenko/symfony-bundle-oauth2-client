@@ -1,0 +1,35 @@
+services:
+    pe_oauth2_client.object_manager:
+        class: Doctrine\Common\Persistence\ObjectManager
+        arguments:
+            - '%pe_oauth2_client.object_manager_name%'
+
+    pe_oauth2_client.repository.social_account.default:
+        class: PE\Bundle\OAuth2ClientBundle\Doctrine\SocialAccountRepository
+        arguments:
+            - '@pe_oauth2_client.object_manager'
+            - '%pe_oauth2_client.class.social_account%'
+
+    pe_oauth2_client.security.provider_registry:
+        public: true
+        lazy: true
+        class: PE\Bundle\OAuth2ClientBundle\Security\ProviderRegistry
+        arguments:
+            - '@service_container'
+            - [] # Filled in extension class
+            - [] # Filled in extension class
+
+    pe_oauth2_client.security.authenticator:
+        public: true
+        class: PE\Bundle\OAuth2ClientBundle\Security\Authenticator
+        arguments:
+            - '@pe_oauth2_client.security.provider_registry'
+            - '@event_dispatcher'
+            - '@pe_oauth2_client.repository.social_account'
+            - '%pe_oauth2_client.target_path%'
+
+    pe_oauth2_client.twig_extension:
+        class: PE\Bundle\OAuth2ClientBundle\Twig\PEOAuth2ClientExtension
+        arguments:
+            - '@twig'
+            - '@pe_oauth2_client.security.provider_registry'

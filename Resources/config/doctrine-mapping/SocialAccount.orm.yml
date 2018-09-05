@@ -1,0 +1,13 @@
+PE\Bundle\OAuth2ClientBundle\Model\SocialAccount:
+    type: mappedSuperclass
+    fields:
+        socialID:
+            type: string
+        socialType:
+            type: string
+        userClass:
+            type: string
+            nullable: true
+        userID:
+            type: string
+            nullable: true

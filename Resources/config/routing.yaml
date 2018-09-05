@@ -1,0 +1,4 @@
+pe_oauth2_client__authenticate:
+    path: /{provider}/
+    defaults:
+        _controller: ~

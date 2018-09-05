@@ -1,0 +1,12 @@
+{%- if providers|length -%}
+    <ul class="list-unstyled">
+        <li>{{ 'sign_in_label'|trans({}, 'PEOAuth2Client') }}</li>
+        {%- for options, name in providers -%}
+            <li>
+                <a href="{{ path('pe_oauth2_client__authenticate', {provider: name}) }}">
+                    {{ name }}{#TODO text buttons|text+icon buttons|icon buttons#}
+                </a>
+            </li>
+        {%- endfor -%}
+    </ul>
+{%- endif -%}

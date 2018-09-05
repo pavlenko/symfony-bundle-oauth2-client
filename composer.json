@@ -1,0 +1,44 @@
+{
+    "config": {
+        "sort-packages": true
+    },
+    "name": "pe/symfony-bundle-oauth2-client",
+    "description": "Symfony integration of league/oauth2-client",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eugene Pavlenko",
+            "email": "pavlenko.obs@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^5.5.9|>=7.0.8",
+        "league/oauth2-client": "^2.0 <2.3.0",
+        "symfony/framework-bundle": "~3.4|~4.0"
+    },
+    "require-dev": {
+        "league/oauth2-facebook": "^2.0",
+        "league/oauth2-github": "^2.0",
+        "league/oauth2-google": "^2.2",
+        "league/oauth2-instagram": "^2.0",
+        "league/oauth2-linkedin": "^3.0"
+    },
+    "suggest": {
+        "league/oauth2-facebook": "To use Facebook authentication provider",
+        "league/oauth2-github": "To use Github authentication provider",
+        "league/oauth2-google": "To use Google authentication provider",
+        "league/oauth2-instagram": "To use Instagram authentication provider",
+        "league/oauth2-linkedin": "To use LinkedIn authentication provider"
+    },
+    "autoload": {
+        "psr-4": {
+            "PE\\Bundle\\OAuth2ClientBundle\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
