@@ -1,4 +1,4 @@
-# OAuth server symfony bundle
+# OAuth client symfony bundle
 This bundle integrates with [league/oauth2-client](http://oauth2-client.thephpleague.com/).
 
 ## Installation
