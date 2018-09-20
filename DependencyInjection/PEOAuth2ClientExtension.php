@@ -2,6 +2,7 @@
 
 namespace PE\Bundle\OAuth2ClientBundle\DependencyInjection;
 
+use PE\Bundle\OAuth2ClientBundle\Model\Button;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -68,8 +69,8 @@ class PEOAuth2ClientExtension extends Extension
         // Process clients
         if (!empty($config['provider'])) {
             $definition = $container->getDefinition('pe_oauth2_client.security.provider_registry');
-            $serviceMap = [];
-            $optionsMap = [];
+
+            $serviceMap = $buttonMap = [];
 
             foreach ($config['provider'] as $name => $providerConfig) {
                 $providerConfig['options']['redirectUri'] = new Expression(
@@ -84,14 +85,26 @@ class PEOAuth2ClientExtension extends Extension
                 $providerDefinition->setArguments([$providerConfig['options'], $providerConfig['collaborators']]);
                 $providerDefinition->setPublic(true);
 
-                $serviceMap[$name] = $id = 'pe_oauth2_client.provider.' . $name;
-                $optionsMap[$name] = $providerConfig['options'];
+                $providerConfig['button']['href'] = $providerConfig['options']['redirectUri'];
 
-                $container->setDefinition($id, $providerDefinition);
+                $buttonDefinition = new Definition(Button::class);
+                $buttonDefinition->setArguments([
+                    $providerConfig['button']['type'],
+                    $providerConfig['button']['href'],
+                    $providerConfig['button']['text'] ?: $name,
+                    $providerConfig['button']['icon'],
+                    $providerConfig['button']['class'],
+                    $providerConfig['button']['attr'],
+                ]);
+                $buttonDefinition->setPublic(true);
+
+                $container->setDefinition($serviceMap[$name] = 'pe_oauth2_client.provider.' . $name, $providerDefinition);
+                $container->setDefinition($buttonMap[$name] = 'pe_oauth2_client.button.' . $name, $buttonDefinition);
             }
 
             $definition->replaceArgument(1, $serviceMap);
-            $definition->replaceArgument(2, $optionsMap);
+            $definition->replaceArgument(2, $buttonMap);
+            $definition->replaceArgument(3, array_keys($config['provider']));
         }
     }
 

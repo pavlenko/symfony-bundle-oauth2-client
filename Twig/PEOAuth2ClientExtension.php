@@ -47,14 +47,18 @@ class PEOAuth2ClientExtension extends \Twig_Extension
      */
     public function renderButtons(array $options = [])
     {
-        $providers = $this->providerRegistry->getOptionsMap();
+        $names = $this->providerRegistry->getNames();
 
         if (isset($options['exclude']) && is_array($options['exclude'])) {
-            $providers = array_filter($providers, function ($name) use ($options) {
+            $providers = array_filter($names, function ($name) use ($options) {
                 return !in_array($name, $options['exclude']);
-            }, ARRAY_FILTER_USE_KEY);
+            });
         }
 
-        return $this->environment->render('@PEOAuth2Client/Default/buttons.html.twig', ['providers' => $providers]);
+        $buttons = array_map(function ($name) {
+            return $this->providerRegistry->getButton($name);
+        }, $names);
+
+        return $this->environment->render('@PEOAuth2Client/Default/buttons.html.twig', ['buttons' => $buttons]);
     }
 }

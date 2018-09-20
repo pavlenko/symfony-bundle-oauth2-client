@@ -89,7 +89,7 @@ class Authenticator extends AbstractGuardAuthenticator
             }
 
             $providerName = $request->attributes->get('provider');
-            $provider     = $this->providerRegistry->get($providerName);
+            $provider     = $this->providerRegistry->getProvider($providerName);
 
             $code  = $request->get('code');
             $state = $request->get('state');
@@ -119,7 +119,7 @@ class Authenticator extends AbstractGuardAuthenticator
         /* @var $token AccessToken */
         list($providerName, $token) = $credentials;
 
-        $oauthUser = $this->providerRegistry->get($providerName)->getResourceOwner($token);
+        $oauthUser = $this->providerRegistry->getProvider($providerName)->getResourceOwner($token);
 
         // Check social account exists
         $socialAccount = $this->socialAccountRepository->findAccountBySocial($providerName, $oauthUser->getId());
@@ -178,10 +178,7 @@ class Authenticator extends AbstractGuardAuthenticator
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        $providerName = $request->attributes->get('provider');
-        $targetPath   = $this->providerRegistry->getOption($providerName, 'targetPath') ?: $this->targetPath;
-
-        return new RedirectResponse($targetPath);
+        return new RedirectResponse($this->targetPath);
     }
 
     /**

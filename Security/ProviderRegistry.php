@@ -3,6 +3,7 @@
 namespace PE\Bundle\OAuth2ClientBundle\Security;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
+use PE\Bundle\OAuth2ClientBundle\Model\Button;
 use Psr\Container\ContainerInterface;
 
 class ProviderRegistry
@@ -18,19 +19,27 @@ class ProviderRegistry
     private $serviceMap;
 
     /**
-     * @var array
+     * @var string[]
      */
-    private $optionsMap;
+    private $buttonMap;
+
+    /**
+     * @var string[]
+     */
+    private $names;
 
     /**
      * @param ContainerInterface $container
      * @param string[]           $serviceMap
+     * @param string[]           $buttonMap
+     * @param string[]           $names
      */
-    public function __construct(ContainerInterface $container, array $serviceMap, array $optionsMap)
+    public function __construct(ContainerInterface $container, array $serviceMap, array $buttonMap, array $names)
     {
         $this->container  = $container;
         $this->serviceMap = $serviceMap;
-        $this->optionsMap = $optionsMap;
+        $this->buttonMap  = $buttonMap;
+        $this->names      = $names;
     }
 
     /**
@@ -38,9 +47,9 @@ class ProviderRegistry
      *
      * @return bool
      */
-    public function has($name)
+    public function hasProvider($name)
     {
-        return isset($this->serviceMap[$name]);
+        return in_array($name, $this->names);
     }
 
     /**
@@ -48,13 +57,13 @@ class ProviderRegistry
      *
      * @return AbstractProvider
      */
-    public function get($name)
+    public function getProvider($name)
     {
-        if (!isset($this->serviceMap[$name])) {
+        if (!in_array($name, $this->names)) {
             throw new \InvalidArgumentException(sprintf(
                 'There is no OAuth2 provider called "%s". Available are: %s',
                 $name,
-                implode(', ', array_keys($this->serviceMap))
+                implode(', ', $this->names)
             ));
         }
 
@@ -62,26 +71,28 @@ class ProviderRegistry
     }
 
     /**
-     * @return array
+     * @param string $name
+     *
+     * @return Button
      */
-    public function getOptionsMap()
+    public function getButton($name)
     {
-        return $this->optionsMap;
+        if (!in_array($name, $this->names)) {
+            throw new \InvalidArgumentException(sprintf(
+                'There is no OAuth2 provider called "%s". Available are: %s',
+                $name,
+                implode(', ', $this->names)
+            ));
+        }
+
+        return $this->container->get($this->buttonMap[$name]);
     }
 
     /**
-     * @param string $name
-     * @param string $option
-     * @param mixed  $default
-     *
-     * @return mixed
+     * @return string[]
      */
-    public function getOption($name, $option, $default = null)
+    public function getNames()
     {
-        if (isset($this->optionsMap[$name], $this->optionsMap[$name][$option])) {
-            return $this->optionsMap[$name][$option];
-        }
-
-        return $default;
+        return $this->names;
     }
 }
