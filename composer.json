@@ -16,10 +16,10 @@
         "php": ">=7.0.8",
         "doctrine/common": "^2.7",
         "league/oauth2-client": "^2.0 <2.3.0",
-        "symfony/expression-language": "~3.4|~4.0",
-        "symfony/framework-bundle": "~3.4|~4.0",
-        "symfony/security-bundle": "~3.4|~4.0",
-        "symfony/twig-bundle": "~3.4|~4.0"
+        "symfony/expression-language": "~4.4",
+        "symfony/framework-bundle": "~4.4",
+        "symfony/security-bundle": "~4.4",
+        "symfony/twig-bundle": "~4.4"
     },
     "require-dev": {
         "league/oauth2-facebook": "^2.0",
